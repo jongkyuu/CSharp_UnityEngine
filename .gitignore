@@ -455,4 +455,7 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
+# Ignore Asset Directory
+unity-chan!/
+
 # End of https://www.toptal.com/developers/gitignore/api/csharp,unity
