@@ -2,50 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
-// 1. 위치벡터
-// 2. 방향벡터
-struct MyVector
-{
-    public float x;
-    public float y;
-    public float z;
-
-    // 거리 구할때 magnitude 사용
-    public float magnitude
-    { 
-        get { return  Mathf.Sqrt(x*x + y*y + z*z); }  // 피타고라스 정리 활용
-    }
-
-    // magnitude와 방향은 같고 크기가 1인 벡터
-    // normalized에 거리만큼의 크기를 곱해주면 그 방향으로 크기만큼 이동
-    public MyVector normalized
-    {
-        get { return new MyVector(x / magnitude, y / magnitude, z / magnitude); }
-    }
-       
-    public MyVector(float x, float y, float z)
-    {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-    }
-
-    public static MyVector operator +(MyVector a, MyVector b)
-    {
-        return new MyVector(a.x + b.x, a.y + b.y, a.z + b.z);
-    }
-    public static MyVector operator -(MyVector a, MyVector b)
-    {
-        return new MyVector(a.x - b.x, a.y - b.y, a.z - b.z);
-    }
-
-    public static MyVector operator *(MyVector a, float d)
-    {
-        return new MyVector(a.x * d, a.y * d, a.z * d);
-    }
-
-}
 public class PlayerController : MonoBehaviour
 {
     // public을 붙여 주면 에디터에서 해당 변수를 조절할 수 있음
@@ -59,49 +15,55 @@ public class PlayerController : MonoBehaviour
         //MyVector pos = new MyVector(1.0f, 0.0f, 0.0f);
         //pos += new MyVector(0.0f, 2.0f, 0.0f);
 
-        MyVector to = new MyVector(10.0f, 0.0f, 0.0f);  // 목적지
-        MyVector from = new MyVector(5.0f, 0.0f, 0.0f);  // 현재위치
-        MyVector dir = to - from;  // (5.0f, 0.0f, 0.0f)
-
-        MyVector normalizedDir = dir.normalized;  // (1.0f, 0.0f, 0.0f)
-
-        MyVector newPos = from + normalizedDir * _speed;
-
-        // 방향 벡터
-        //   1. 거리(크기)
-        //   2. 실제 방향
     }
 
-    // 최상단에 GameObject(Player)
-    // Transform
-    // PlayerController (*)
+    float _yAngle = 0.0f;
     void Update()   
     {
-        // 한 Frame당 호출되는 함수
-        // 60Frame의 게임이라면 1/60초 마다 Update함수가 실행되므로 너무 빠르게 이동하게 된다
-        // 이전 Frame과 지금 Frame의 시간 차이를 구하고 그걸 활용해서 이동속도를 조절해야 한다
-        
-        // Local -> World 좌표를 변환
-        // transform.TransformDirection() 
-        // World -> Local 좌표 변환
-        // transform.InverseTransformDirection()
-        // transform.Translate() 사용해도 됨. 이건 로컬을 기준으로 계산해준다
 
-        // 게임수학을 공부해서 행렬을 이용해서 좌표계산을 할 수도 있음 
+        _yAngle += Time.deltaTime * 100.0f;
+        //transform.rotation
 
+        // 절대 회전값을 지정해서 이동시킴
+        // transform.eulerAngles = new Vector3(0.0f, _yAngle, 0.0f);  // eulerAngles는 3개 요소를 한번에 다 넣어주도록 문서에 명시되어 있음.
+                                                                   // (0.0f, Time.deltaTime * 100.0f, 0.0f) 처럼 쓰면 에러날수 있음 
+        // +- delta 값을 특정 축을 중심으로 회전시킴
+        //transform.Rotate(new Vector3(0.0f, Time.deltaTime * 100.0f, 0.0f));
+
+        //transform.rotation =  Quaternion.Euler(new Vector3(0.0f, _yAngle, 0.0f));  // Quaternion.Euler는 벡터를 입력하면 Quaternion으로 변환해줌
 
         if (Input.GetKey(KeyCode.W))
-            transform.position += transform.TransformDirection(Vector3.forward * Time.deltaTime * _speed);   // new Vector3(0.0f, 0.0f, 1.0f) -> Vector3.forward 예약어를 사용하면 가독성이 더 좋음
+        {
+            //transform.rotation = Quaternion.LookRotation(Vector3.forward);  // 캐릭터가 월드 좌표 기준의 forward를 바라봄
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(Vector3.forward), 0.1f);
+            //transform.position += transform.TransformDirection(Vector3.forward * Time.deltaTime * _speed);   // new Vector3(0.0f, 0.0f, 1.0f) -> Vector3.forward 예약어를 사용하면 가독성이 더 좋음
+            // TransformDirection()은 캐릭터가 바라보는 방향으로 이동하는 것이기 때문에 Quaternion.Slerp와 사용하면 부자연스럽게 곡선을 그리며 움직인다.
+            // 이때는 월드 좌표 기준으로 이동하도록 수정해주면 좀 더 자연스럽게 보일 수 있다.
+            transform.position += Vector3.forward * Time.deltaTime * _speed;
+        }
         if (Input.GetKey(KeyCode.S))
-            transform.Translate(Vector3.back * Time.deltaTime * _speed);  // 시간 * 속력 = 거리
+        {
+            //transform.rotation = Quaternion.LookRotation(Vector3.back);
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(Vector3.back), 0.1f);
+            //transform.Translate(Vector3.forward * Time.deltaTime * _speed);  // 시간 * 속력 = 거리
+            transform.position += Vector3.back * Time.deltaTime * _speed;
+        }
         if (Input.GetKey(KeyCode.A))
-            transform.Translate(Vector3.left * Time.deltaTime * _speed);
+        {
+            //transform.rotation = Quaternion.LookRotation(Vector3.left);
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(Vector3.left), 0.1f);
+            //transform.Translate(Vector3.forward * Time.deltaTime * _speed);
+            transform.position += Vector3.left * Time.deltaTime * _speed;
+        }
         if (Input.GetKey(KeyCode.D))
-            transform.Translate(Vector3.right * Time.deltaTime * _speed);
+        {
+            //transform.rotation = Quaternion.LookRotation(Vector3.right);
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(Vector3.right), 0.1f);
+            //transform.Translate(Vector3.forward * Time.deltaTime * _speed);
+            transform.position += Vector3.right * Time.deltaTime * _speed;
 
+        }
 
-        // transform.gameObject : 부모인 GameObject에 접근
-        // transform. : transform에 접근
 
     }
 }
