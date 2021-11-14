@@ -15,18 +15,25 @@ public class PlayerController : MonoBehaviour
         //MyVector pos = new MyVector(1.0f, 0.0f, 0.0f);
         //pos += new MyVector(0.0f, 2.0f, 0.0f);
 
+        Managers.Input.KeyAction -= OnKeyBorad;  // 혹시라도 다른 부분에서 OnKeyBoard를 구독했다면 OnKeyBoard가 두번 호출되므로 그걸 방지하기 위해 우선 구독 취소
+        Managers.Input.KeyAction += OnKeyBorad;  // KeyAction에 OnKeyBoad 구독신청, 어떤 Key가 눌러지면 OnKeyBoard 함수를 실행
+
+
     }
 
-    float _yAngle = 0.0f;
     void Update()   
     {
 
-        _yAngle += Time.deltaTime * 100.0f;
+
+    }
+
+    void OnKeyBorad()
+    {
         //transform.rotation
 
         // 절대 회전값을 지정해서 이동시킴
         // transform.eulerAngles = new Vector3(0.0f, _yAngle, 0.0f);  // eulerAngles는 3개 요소를 한번에 다 넣어주도록 문서에 명시되어 있음.
-                                                                   // (0.0f, Time.deltaTime * 100.0f, 0.0f) 처럼 쓰면 에러날수 있음 
+        // (0.0f, Time.deltaTime * 100.0f, 0.0f) 처럼 쓰면 에러날수 있음 
         // +- delta 값을 특정 축을 중심으로 회전시킴
         //transform.Rotate(new Vector3(0.0f, Time.deltaTime * 100.0f, 0.0f));
 
@@ -61,9 +68,6 @@ public class PlayerController : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(Vector3.right), 0.1f);
             //transform.Translate(Vector3.forward * Time.deltaTime * _speed);
             transform.position += Vector3.right * Time.deltaTime * _speed;
-
         }
-
-
     }
 }

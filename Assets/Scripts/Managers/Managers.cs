@@ -20,7 +20,7 @@ public class Managers : MonoBehaviour
     //public static Managers GetInstance() { Init(); return s_instance; }  // 유일한 매니저를 가지고 온다
 
     // 프로퍼티로 변경
-    public static Managers Instance
+    static Managers Instance
     {
         get 
         {
@@ -29,7 +29,9 @@ public class Managers : MonoBehaviour
         }
     }
 
-    // Start is called before the first frame update
+    InputManager _input = new InputManager();
+    public static InputManager Input { get { return Instance._input; } }
+
     void Start()
     {
         // 초기화
@@ -42,10 +44,10 @@ public class Managers : MonoBehaviour
         Init();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+        // 키 입력을 Managers 에서 대표로 해줌
+        _input.OnUpdate();
     }
 
     static void Init()
