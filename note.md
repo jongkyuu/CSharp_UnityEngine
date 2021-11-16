@@ -204,8 +204,14 @@ transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotatio
 
 # Chapter 4
 
-## Prefab
+## Prefab(Pre-Fabrication)
 
 프리팹은 여러 컴포넌트들로 미리 구성해 놓은 게임 오브젝트이다. Scene에 새로운 프리팹 인스턴스를 만들기 위한 템플릿 역할을 한다. 프리팹을 활용하여 게임 오브젝트를 생성, 설정 및 저장할 수 있으며 프리팹 에셋에 대한 모든 변경 사항은 해당 프리팹 인스턴스에 자동으로 반영된다. 생성된 프리팹 인스턴스는 서로 독립적으로 동작하며 프리팹 인스턴스를 수정해도 다른 프리팹 인스턴스에는 영향을 주지 않는다.
 
 게임 오브젝트(Game Object)는 월드상에 존재하며, 프리팹은 Asset 폴더에 데이터로 존재한다. 프리팹을 기반으로 인스턴스를 생성하면 런타입 시점에 월드 상의 게임 오브젝트로 존재하게 된다.
+
+### Prefab 오버라이드
+
+### Nested Prefab
+
+### Prefab Variant
