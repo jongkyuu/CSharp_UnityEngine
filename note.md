@@ -234,3 +234,12 @@ transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotatio
 ### Prefab Variants
 
 프리팹 Variants는 프리팹의 사전 정의된 배리에이션 집합이 필요할 때 유용하다. 예를들어 게임 내에서 동일한 기본 GermSlime 프리팹에 기반한 여러 타입의 GermSlime을 만든 후 그 중 일부 GermSlime이 아이템을 운반하거나 다른 속도로 움직이는 등의 효과를 내도록 할 수 있다. 모든 GermSlime이 공유할 기본 액션을 초기 GermSlime 프리팹이 모두 수행하도록 설정 한 후 스크립트에 속도 프로퍼티를 오버라이드 해서 GermSlime이 더 빠르게 움직이도록 한다. 프리팹 배리언트는 다른 프리팹(기본 프리팹이라고 불림)의 프로퍼티를 상속하고, 프리팹 Variants에 적용된 오버라이드는 기본 프리팹의 값보다 더 우선시된다.
+
+# Resource Manager
+
+### Resource Manager 사용법
+
+![](2021-11-22-23-52-43.png)
+
+- Resource Manager 내용과 어떻게 사용했는지 사용 코드 추가하기
+- 똑같은 인터페이스를 Wrapping만 한것
