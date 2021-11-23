@@ -243,3 +243,7 @@ transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotatio
 
 - Resource Manager 내용과 어떻게 사용했는지 사용 코드 추가하기
 - 똑같은 인터페이스를 Wrapping만 한것
+
+### Model Prefab Instance
+
+설명 붙이기
