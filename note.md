@@ -235,7 +235,7 @@ transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotatio
 
 프리팹 Variants는 프리팹의 사전 정의된 배리에이션 집합이 필요할 때 유용하다. 예를들어 게임 내에서 동일한 기본 GermSlime 프리팹에 기반한 여러 타입의 GermSlime을 만든 후 그 중 일부 GermSlime이 아이템을 운반하거나 다른 속도로 움직이는 등의 효과를 내도록 할 수 있다. 모든 GermSlime이 공유할 기본 액션을 초기 GermSlime 프리팹이 모두 수행하도록 설정 한 후 스크립트에 속도 프로퍼티를 오버라이드 해서 GermSlime이 더 빠르게 움직이도록 한다. 프리팹 배리언트는 다른 프리팹(기본 프리팹이라고 불림)의 프로퍼티를 상속하고, 프리팹 Variants에 적용된 오버라이드는 기본 프리팹의 값보다 더 우선시된다.
 
-# Resource Manager
+## Resource Manager
 
 ### Resource Manager 사용법
 
@@ -247,3 +247,67 @@ transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotatio
 ### Model Prefab Instance
 
 설명 붙이기
+
+## Animation
+
+모델이 동작하는 방식을 정의하는 파일이다. 걷거나 뛰거나 팔을 휘두르는 모션을 애니메이터가 정의해서 만든다.
+
+## Material
+
+유니티에서 GameObject의 컬러는 Material이 결정한다. Material은 Shaders와 Texture가 합쳐진 에셋으로 오브젝트의 픽셀 컬러를 결정한다.
+
+그림판 같은 도구에서 사용하는 2D는 빛에 대한 영향이 없다는 특징이 있다. 2D는 고유한 Color값이 결정되고 외부 영향에 의해 변경되지 않는다.
+하지만 3차원으로 넘어오면 빛이라는 개념이 생겨서 같은 Color라 하더라도 보여지는 각도에 따라 다르게 표현되어야 하는 이슈가 생긴다. 이렇게 3차원에서 빛 영향에 대한 처리를 렌더링(Rendering)이라고 부른다.
+
+렌더링을 효과적으로 처리하기 위해 3D 물체의 표면에 대한 정보를 별도로 관리하는데 이를 Material이라고 한다. 따라서 GameObject의 색깔을 바꾸려면 Material을 찾아야 한다.
+
+### Shaders
+
+Material과 Lighting 정보를 기반으로 픽셀마다 어떤 색상으로 표현할지 계산하는 수식과 알고리즘으로 구성된 스크립트이다. 빛을 처리하는 방법을 의미하며 그래픽을 화려하게 표현할 수 있는 기능이다. 쉐이더는 GPU에서 작동하는 프로그램이기 때문에 쉐이더 프로그래밍이란 말이 더 많이 사용된다. 유니티에서는 가장 일반적이고 성능이 좋은 Standard Shader를 만들어 놓았기 때문에 여러분은 이것을 사용하기만 하면 된다.
+
+![](2021-11-25-23-11-16.png)
+
+### Textures
+
+오브젝트의 표면에 대한 정보를 담고 있는 비트맵 이미지이다. Texture/Atals에서 원하는 부분만 선택적으로 사용할 수 있다(UV Mapping).
+
+![](2021-11-25-23-09-27.png)
+
+텍스쳐를 잘 활용하면 색깔보다 더 실감나는 3D 물체를 표현할 수 있다.
+
+# Chapter 5
+
+## Collider
+
+유니티에서 물리를 적용하기 위해서는 RigidBody Component를 붙여줘야 한다.
+
+아래 4가지 옵션을 자주 사용한다.
+
+- Mass : 질량, 단위는 Kg
+- Use Gravity : 중력을 사용할지
+- Is Kinematic
+- Constraints
+
+새로운것을 배울때 항상 공식 문서를 보는것을 습관화하자.
+
+[공식 문서](https://docs.unity3d.com/ScriptReference/Rigidbody.html)를 보면 Rigidbody가 아래와 같이 설명되어 있다.
+
+```
+Control of an object's position through physics simulation.  Adding a Rigidbody component to an object will put its motion under the control of Unity's physics engine. Even without adding any code, a Rigidbody object will be pulled downward by gravity and will react to collisions with incoming objects if the right Collider component is also present.
+
+물리 시물레이션을 통한 object의 위치를 제어.
+
+obejct에 Rigidbody component를 추가하면 obejct의 움직임이 유니티 물리엔진의 컨트롤 하에 놓이게 됩니다. 코드를 추가하지 않고도 Rigidbody obejct는 중력에 의해 아래로 당겨지게 되고, 올바른 Collider component가 있다면 다가오는 objects와의 충돌에 반응합니다
+```
+
+Player에 Capsule Collider를 붙여 주면 여러가지 파라미터가 있는데 전부 알 필요는 없다. Edit Collider를 사용해 Player가 충돌하는 범위를 표시해 준다.
+
+![](2021-11-25-23-42-13.png)
+
+충돌할 때 Player 자체를 이용해서 연산하면 되는데 왜 Capsule Collider를 씌워서 충돌 범위를 인식하는지 궁금할 수 있다.
+
+Player는 무수한 삼각형들로 이루어져 있고 정확히 연산하기 위해서는 엄청난 연산량이 필요하게 된다. 실제 게임에서는 Player가 하나만 있는게 아니라 몬스터 몇백마리가 있을 수 있는데 객체마다 미세한 충돌을 판정하면 연산량을 감당할 수 없다. 그래서 대부분 사용하는 방법은 Player의 Mesh를 기준으로 충돌하기 보다는 Capsule을 씌워서 Capsule이 충돌했는지 여부를 판단한다.
+
+FPS 게임처럼 Collider를 부위별로 붙여서 더 정확하게 충돌 여부를 판정해야 하고 RPG 게임 같은 경우는 위와 같이 rough 하게 붙여줘도 괜찮다.
+
+Player가 공중에서 바닥으로 떨어질 때 바닥의 Mesh Collider를 끄면 바닥을 뚫고 아래로 떨어지게 된다. Player만 Collider를 가지고 있으면 되는게 아니라 충돌 대상도 Collider라는 충돌 범위를 가지고 있어야 그 두 Collider를 이용해서 충돌했는지 여부를 판단할 수 있다.
