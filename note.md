@@ -311,3 +311,5 @@ Player는 무수한 삼각형들로 이루어져 있고 정확히 연산하기 �
 FPS 게임처럼 Collider를 부위별로 붙여서 더 정확하게 충돌 여부를 판정해야 하고 RPG 게임 같은 경우는 위와 같이 rough 하게 붙여줘도 괜찮다.
 
 Player가 공중에서 바닥으로 떨어질 때 바닥의 Mesh Collider를 끄면 바닥을 뚫고 아래로 떨어지게 된다. Player만 Collider를 가지고 있으면 되는게 아니라 충돌 대상도 Collider라는 충돌 범위를 가지고 있어야 그 두 Collider를 이용해서 충돌했는지 여부를 판단할 수 있다.
+
+## Kinematic
