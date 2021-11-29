@@ -313,3 +313,39 @@ FPS 게임처럼 Collider를 부위별로 붙여서 더 정확하게 충돌 여�
 Player가 공중에서 바닥으로 떨어질 때 바닥의 Mesh Collider를 끄면 바닥을 뚫고 아래로 떨어지게 된다. Player만 Collider를 가지고 있으면 되는게 아니라 충돌 대상도 Collider라는 충돌 범위를 가지고 있어야 그 두 Collider를 이용해서 충돌했는지 여부를 판단할 수 있다.
 
 ## Kinematic
+
+물리의 적용을 받지 않게 해줌
+
+RigidBody는 유니티 물리를 사용하기 위해서 뿐만 아니라, 충돌 판정을 이용하기 위해서도 사용한다.
+Colider와 Colider끼리 부딪혔을 때 일어나는 판정을 이벤트를 받아서 알 수 있으면 그 시점에서 다양한 일들을 할 수 있다.
+
+RigidBody에 Is Kinematic을 켜면 물리의 영향을 받지 않기 때문에 큐브를 뚫고 들어간다.
+![](2021-11-29-22-18-09.png)
+
+Is Kinematic을 끄면 물리의 영향을 받아 상자에 부딪히고 넘어지게 된다.
+![](2021-11-29-22-20-23.png)
+
+튕겨져 나가는게 마음에 들지 않으면 Freeze Roition을 조정하면 된다.
+체크하면 회전을 안하다록 축을 묶는다.
+
+### Collision이 뜨는 조건
+
+1. 나한테 RigidBody가 있어야 한다. (IsKinematic : Off)
+2. 나한테 Collider가 있어야 한다. (IsTrigger : Off)
+3. 상대한테 Collider가 있어야 한다. (IsTrigger : Off)
+
+```csharp
+//Collision 이벤트 발생시 실행
+private void OnCollisionEnter(Collision collision)
+{
+    Debug.Log("Collision!");
+}
+
+//Trigger 이벤트 발생시 실행
+private void OnTriggerEnter(Collider other)
+{
+    Debug.Log("Trigger!");
+
+}
+
+```
