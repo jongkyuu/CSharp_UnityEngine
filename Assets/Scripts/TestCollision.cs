@@ -6,7 +6,7 @@ public class TestCollision : MonoBehaviour
 {
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("Collision!");
+        Debug.Log($"Collision @ {collision.gameObject.name}");
     }
     private void OnTriggerEnter(Collider other)
     {
