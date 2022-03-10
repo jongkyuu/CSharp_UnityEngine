@@ -31,11 +31,37 @@ public class TestCollision : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // Screen 좌표계 표현
-        // Input.mousePosition : 현재 마우스 좌표를 픽셀 좌표로 뽑아온다. 픽셀 좌표가 Screen 좌표이다. 
-        //Debug.Log(Input.mousePosition);
 
-        // Viewport 
-        Debug.Log(Camera.main.ScreenToViewportPoint(Input.mousePosition));
+        //if (Input.GetMouseButtonDown(0))
+        //{
+        //    Vector3 mousePos = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.nearClipPlane));  // 클릭한 지점의 월드 좌표(Near Clipping Plan에 있는 월드좌표)
+        //    Vector3 dir = mousePos - Camera.main.transform.position;  // 카메라 위치에서 Near Clipping Plan에 있는 좌표까지의 방향벡터
+        //    dir = dir.normalized;   // 크기를 1로 만듬
+
+        //    Debug.DrawRay(Camera.main.transform.position, dir * 100.0f, Color.red, 1.0f);
+
+        //    RaycastHit hit;
+        //    if (Physics.Raycast(Camera.main.transform.position, dir, out hit, 100.0f)) ;
+        //    {
+        //        Debug.Log($"Raycast Camera @ {hit.collider.gameObject.name}");
+        //        //Debug.Log($"Raycast Camera @ {hit.transform.gameObject.name}");
+        //    }
+        //}
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            Debug.DrawRay(Camera.main.transform.position, ray.direction * 100.0f, Color.red, 1.0f);
+
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit, 100.0f)) ;
+            {
+                Debug.Log($"Raycast Camera @ {hit.collider.gameObject.name}");
+                //Debug.Log($"Raycast Camera @ {hit.transform.gameObject.name}");
+            }
+
+        }
+
     }
 }
